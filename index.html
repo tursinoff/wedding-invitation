@@ -56,39 +56,42 @@ h2.lt{color:#F5F2ED}
 
 /* ─ HERO ─ */
 #hero{
-  padding:3rem 1.5rem 3.5rem;
+  padding:0 0 3rem;
   background:#F5F2ED;
-  display:flex;flex-direction:column;align-items:center;gap:2rem;
+  display:flex;flex-direction:column;align-items:center;gap:0;
 }
-/* sage radial glow wrapper */
+/* photo wrapper – full width, no border/radius */
 .hero-glow{
   position:relative;
-  width:min(260px,64vw);
+  width:100%;
   flex-shrink:0;
+  /* sage glow radiates behind the image */
 }
 .hero-glow::before{
   content:'';position:absolute;
-  inset:-20px;border-radius:50% 50% 30% 30%;
-  background:radial-gradient(ellipse at 50% 35%,
-    rgba(188,199,185,.6) 0%,rgba(188,199,185,.25) 45%,transparent 72%);
-  filter:blur(20px);z-index:0;
+  bottom:-30px;left:0;right:0;height:120px;
+  background:radial-gradient(ellipse at 50% 100%,
+    rgba(188,199,185,.55) 0%,rgba(188,199,185,.2) 50%,transparent 80%);
+  filter:blur(18px);z-index:2;pointer-events:none;
 }
-/* arch photo */
+/* plain rect photo, no arch */
 .hero-arch{
   position:relative;z-index:1;
-  border-radius:9999px 9999px 0 0;overflow:hidden;
-  width:100%;aspect-ratio:3/4;
-  border:1.5px solid rgba(188,199,185,.45);
-  box-shadow:0 18px 52px rgba(45,58,45,.13);
+  width:100%;
+  /* limit height so it's not enormous */
+  max-height:min(55vh,420px);
+  overflow:hidden;
+  border:none;border-radius:0;box-shadow:none;
 }
 .hero-arch img{
-  width:100%;height:100%;object-fit:cover;object-position:center 12%;display:block;
+  width:100%;height:100%;object-fit:cover;object-position:center 18%;display:block;
+  /* fade: sharp at top, dissolves at bottom into linen */
   -webkit-mask-image:linear-gradient(to bottom,
-    black 0%,black 52%,rgba(0,0,0,.65) 70%,rgba(0,0,0,.2) 86%,transparent 100%);
+    black 0%,black 42%,rgba(0,0,0,.7) 62%,rgba(0,0,0,.15) 82%,transparent 100%);
   mask-image:linear-gradient(to bottom,
-    black 0%,black 52%,rgba(0,0,0,.65) 70%,rgba(0,0,0,.2) 86%,transparent 100%);
+    black 0%,black 42%,rgba(0,0,0,.7) 62%,rgba(0,0,0,.15) 82%,transparent 100%);
 }
-.hero-text{text-align:center}
+.hero-text{text-align:center;padding:1.6rem 1.5rem 0;position:relative;z-index:3}
 .hero-date{font-size:.58rem;font-weight:700;letter-spacing:.42em;text-transform:uppercase;color:#96A893;margin-bottom:.9rem}
 .hero-names{
   font-family:'Prata',serif;
@@ -156,8 +159,8 @@ h2.lt{color:#F5F2ED}
 .cd-lbl{font-family:'Manrope',sans-serif;font-size:clamp(.34rem,1vw,.48rem);font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#96A893;margin-top:.28rem;white-space:nowrap}
 .cd-photo{width:min(190px,55vw);height:min(190px,55vw);border-radius:50%;overflow:hidden;margin:0 auto;border:3px solid rgba(188,199,185,.2);box-shadow:0 14px 44px rgba(0,0,0,.38)}
 .cd-photo img{width:100%;height:100%;object-fit:cover;object-position:center 18%;-webkit-mask-image:radial-gradient(circle at 50% 36%,black 50%,rgba(0,0,0,.5) 70%,transparent 100%);mask-image:radial-gradient(circle at 50% 36%,black 50%,rgba(0,0,0,.5) 70%,transparent 100%)}
-.fw-photo{width:min(220px,62vw);border-radius:9999px 9999px 0 0;overflow:hidden;margin:0 auto 1.8rem;border:2px solid rgba(188,199,185,.18);box-shadow:0 20px 56px rgba(0,0,0,.42)}
-.fw-photo img{width:100%;display:block;filter:grayscale(22%) brightness(.83);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 60%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 60%,transparent 100%)}
+.fw-photo{width:min(240px,68vw);aspect-ratio:2/3;border-radius:9999px 9999px 0 0;overflow:hidden;margin:0 auto 1.8rem;border:2px solid rgba(188,199,185,.18);box-shadow:0 20px 56px rgba(0,0,0,.42)}
+.fw-photo img{width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block;filter:grayscale(22%) brightness(.83);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 60%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 60%,transparent 100%)}
 
 /* ─ FORM ─ */
 .fl{display:block;font-family:'Manrope',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#6B7D6B;margin-bottom:.38rem}
@@ -375,23 +378,25 @@ h2.lt{color:#F5F2ED}
             <label class="rr"><input type="radio" name="matt" value="К сожалению, не смогу..." id="matt-n" onchange="onAtt('main',this.value)"/> К сожалению, не смогу...</label>
             <p class="em" id="em-matt">Пожалуйста, выберите вариант</p>
           </div>
-          <!-- Q3 Transport -->
-          <div id="mtr-wrap">
-            <label class="fl">Нужен ли Вам транспорт? *</label>
-            <label class="rr"><input type="radio" name="mtr" value="Да"/> Да</label>
-            <label class="rr"><input type="radio" name="mtr" value="Нет"/> Нет</label>
-            <p class="em" id="em-mtr">Пожалуйста, выберите вариант</p>
+          <!-- Q3 Transport – hidden, shows when "Да, буду!" -->
+          <div id="mtr-wrap" style="max-height:0;overflow:hidden;opacity:0;transition:max-height .45s ease,opacity .38s ease">
+            <div style="padding-top:.2rem">
+              <label class="fl">Нужен ли Вам транспорт?</label>
+              <label class="rr"><input type="radio" name="mtr" value="Да" onchange="onTr('main',this.value)"/> Да</label>
+              <label class="rr"><input type="radio" name="mtr" value="Нет" onchange="onTr('main',this.value)"/> Нет</label>
+            </div>
           </div>
-          <!-- Q4 Seats -->
-          <div id="mst-wrap">
-            <label class="fl" for="mst">Свободное место в машине, если есть — сколько? *</label>
-            <label class="rr"><input type="radio" name="mst" value="Нет"/> Нет свободных мест</label>
-            <label class="rr" style="align-items:center;gap:.5rem">
-              <input type="radio" name="mst" value="other"/>
-              <span>Есть:</span>
-              <input type="text" id="mst-other" class="fi" placeholder="2" style="width:70px;padding:.4rem .6rem;display:inline-block"/>
-            </label>
-            <p class="em" id="em-mst">Пожалуйста, выберите вариант</p>
+          <!-- Q4 Seats – hidden, shows when Q3="Нет" (они едут сами) -->
+          <div id="mst-wrap" style="max-height:0;overflow:hidden;opacity:0;transition:max-height .45s ease,opacity .38s ease">
+            <div style="padding-top:.2rem">
+              <label class="fl" for="mst">Есть ли у вас свободное место в машине?</label>
+              <label class="rr"><input type="radio" name="mst" value="Нет"/> Нет свободных мест</label>
+              <label class="rr" style="align-items:center;gap:.5rem">
+                <input type="radio" name="mst" value="other"/>
+                <span>Есть:</span>
+                <input type="text" id="mst-other" class="fi" placeholder="2" style="width:70px;padding:.4rem .6rem;display:inline-block"/>
+              </label>
+            </div>
           </div>
         </div>
 
@@ -469,26 +474,31 @@ const wt=setInterval(nextW,5000);
 document.querySelectorAll('.wb').forEach(b=>b.addEventListener('click',()=>clearInterval(wt)));
 
 /* ── ATTEND CHANGE ── */
-// when declining: hide transport/seats, auto-fill; when attending: show them
+// Q3 shows only when coming; Q4 shows only when Q3=Нет
+function showEl(el, show){
+  if(!el) return;
+  el.style.maxHeight  = show ? '300px' : '0px';
+  el.style.overflow   = 'hidden';
+  el.style.opacity    = show ? '1' : '0';
+  el.style.transition = 'max-height .45s ease,opacity .38s ease';
+  if(!show){
+    el.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false);
+    el.querySelectorAll('input[type=text]').forEach(i=>i.value='');
+  }
+}
+
 function onAtt(scope, val){
   const coming = val === 'Да, буду!';
   const trWrap = document.getElementById(scope==='main'?'mtr-wrap':'tr-'+scope);
   const stWrap = document.getElementById(scope==='main'?'mst-wrap':'st-'+scope);
-  if(!trWrap||!stWrap) return;
-  // show/hide with CSS transition trick
-  [trWrap,stWrap].forEach(el=>{
-    el.style.maxHeight = coming ? '300px' : '0px';
-    el.style.overflow  = 'hidden';
-    el.style.opacity   = coming ? '1' : '0';
-    el.style.transition= 'max-height .45s ease,opacity .38s ease';
-  });
-  if(!coming){
-    // Clear radios in these blocks so validation passes
-    [trWrap,stWrap].forEach(el=>{
-      el.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false);
-      el.querySelectorAll('input[type=text]').forEach(i=>i.value='');
-    });
-  }
+  showEl(trWrap, coming);
+  showEl(stWrap, false); // always reset seats when attendance changes
+}
+
+function onTr(scope, val){
+  // Q4 (seats) shows only when Q3 = "Нет" (they have own car, no transport needed)
+  const stWrap = document.getElementById(scope==='main'?'mst-wrap':'st-'+scope);
+  showEl(stWrap, val === 'Нет');
 }
 
 /* ── DYNAMIC GUEST CARDS ── */
@@ -513,21 +523,25 @@ function addGuest(){
         <label class="rr"><input type="radio" name="a-${id}" value="К сожалению, не смогу..." onchange="onAtt('${id}',this.value)"/> К сожалению, не смогу...</label>
         <p class="em" id="ea-${id}">Пожалуйста, выберите вариант</p>
       </div>
-      <div id="tr-${id}" style="max-height:300px;overflow:hidden;opacity:1;transition:max-height .45s ease,opacity .38s ease">
-        <label class="fl">Нужен ли транспорт? *</label>
-        <label class="rr"><input type="radio" name="tr-${id}" value="Да"/> Да</label>
-        <label class="rr"><input type="radio" name="tr-${id}" value="Нет"/> Нет</label>
-        <p class="em" id="etr-${id}">Пожалуйста, выберите вариант</p>
+      <!-- Q3: hidden by default, opens on Да буду -->
+      <div id="tr-${id}" style="max-height:0;overflow:hidden;opacity:0;transition:max-height .45s ease,opacity .38s ease">
+        <div style="padding-top:.2rem">
+          <label class="fl">Нужен ли транспорт?</label>
+          <label class="rr"><input type="radio" name="tr-${id}" value="Да" onchange="onTr('${id}',this.value)"/> Да</label>
+          <label class="rr"><input type="radio" name="tr-${id}" value="Нет" onchange="onTr('${id}',this.value)"/> Нет</label>
+        </div>
       </div>
-      <div id="st-${id}" style="max-height:300px;overflow:hidden;opacity:1;transition:max-height .45s ease,opacity .38s ease">
-        <label class="fl">Место в машине *</label>
-        <label class="rr"><input type="radio" name="st-${id}" value="Нет"/> Нет свободных мест</label>
-        <label class="rr" style="align-items:center;gap:.5rem">
-          <input type="radio" name="st-${id}" value="other"/>
-          <span>Есть:</span>
-          <input type="text" id="sto-${id}" class="fi" placeholder="2" style="width:60px;padding:.4rem .55rem;display:inline-block"/>
-        </label>
-        <p class="em" id="est-${id}">Пожалуйста, выберите вариант</p>
+      <!-- Q4: hidden by default, opens when Q3=Нет -->
+      <div id="st-${id}" style="max-height:0;overflow:hidden;opacity:0;transition:max-height .45s ease,opacity .38s ease">
+        <div style="padding-top:.2rem">
+          <label class="fl">Есть ли у вас свободное место в машине?</label>
+          <label class="rr"><input type="radio" name="st-${id}" value="Нет"/> Нет свободных мест</label>
+          <label class="rr" style="align-items:center;gap:.5rem">
+            <input type="radio" name="st-${id}" value="other"/>
+            <span>Есть:</span>
+            <input type="text" id="sto-${id}" class="fi" placeholder="2" style="width:60px;padding:.4rem .55rem;display:inline-block"/>
+          </label>
+        </div>
       </div>
     </div>`;
   wrap.appendChild(card);
@@ -546,48 +560,46 @@ function markRad(name,err){
 }
 
 /* ── VALIDATE BLOCK ──
-   returns data object or null if invalid
-   scope: 'main' | guest-id
-   isMain: bool
+   Only Q1 (name) and Q2 (attend) are required.
+   Q3+Q4 are optional — collected if visible/filled.
 */
 function validateBlock(scope, isMain){
   let ok=true;
 
-  /* Name */
+  /* Q1 Name – REQUIRED */
   const nId = isMain ? 'mn' : 'n-'+scope;
   const nEl = document.getElementById(nId);
   const name = nEl ? nEl.value.trim() : '';
   if(!name){markFi(nEl,true);setErr(isMain?'em-mn':'en-'+scope,true);ok=false}
   else{markFi(nEl,false);setErr(isMain?'em-mn':'en-'+scope,false)}
 
-  /* Attend */
+  /* Q2 Attend – REQUIRED */
   const attName = isMain ? 'matt' : 'a-'+scope;
   const attEl = document.querySelector('input[name="'+attName+'"]:checked');
   if(!attEl){markRad(attName,true);setErr(isMain?'em-matt':'ea-'+scope,true);ok=false}
   else{markRad(attName,false);setErr(isMain?'em-matt':'ea-'+scope,false)}
 
-  const coming = attEl && attEl.value === 'Да, буду!';
+  const coming = attEl && attEl.value === '\u0414\u0430, \u0431\u0443\u0434\u0443!';
 
-  let transport='Не требуется', seats='Не требуется';
-
+  /* Q3 Transport + Q4 Seats – optional */
+  let transport = '\u041d\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f', seats = '\u041d\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f';
   if(coming){
-    /* Transport */
     const trName = isMain ? 'mtr' : 'tr-'+scope;
     const trEl = document.querySelector('input[name="'+trName+'"]:checked');
-    if(!trEl){markRad(trName,true);setErr(isMain?'em-mtr':'etr-'+scope,true);ok=false}
-    else{markRad(trName,false);setErr(isMain?'em-mtr':'etr-'+scope,false);transport=trEl.value}
+    transport = trEl ? trEl.value : '\u041d\u0435 \u0443\u043a\u0430\u0437\u0430\u043d\u043e';
 
-    /* Seats */
-    const stName = isMain ? 'mst' : 'st-'+scope;
-    const stEl = document.querySelector('input[name="'+stName+'"]:checked');
-    if(!stEl){markRad(stName,true);setErr(isMain?'em-mst':'est-'+scope,true);ok=false}
-    else{
-      markRad(stName,false);setErr(isMain?'em-mst':'est-'+scope,false);
-      if(stEl.value==='other'){
-        const otherInput=document.getElementById(isMain?'mst-other':'sto-'+scope);
-        seats=otherInput&&otherInput.value.trim()?otherInput.value.trim():'Указано';
+    if(trEl && trEl.value === '\u041d\u0435\u0442'){
+      const stName = isMain ? 'mst' : 'st-'+scope;
+      const stEl = document.querySelector('input[name="'+stName+'"]:checked');
+      if(stEl){
+        if(stEl.value==='other'){
+          const oi = document.getElementById(isMain?'mst-other':'sto-'+scope);
+          seats = oi && oi.value.trim() ? oi.value.trim() : '\u0415\u0441\u0442\u044c';
+        } else {
+          seats = stEl.value;
+        }
       } else {
-        seats=stEl.value;
+        seats = '\u041d\u0435 \u0443\u043a\u0430\u0437\u0430\u043d\u043e';
       }
     }
   }
