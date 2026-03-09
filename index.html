@@ -56,42 +56,53 @@ h2.lt{color:#F5F2ED}
 
 /* ─ HERO ─ */
 #hero{
-  padding:0 0 3rem;
+  padding:0 0 2.5rem;
   background:#F5F2ED;
   display:flex;flex-direction:column;align-items:center;gap:0;
 }
-/* photo wrapper – full width, no border/radius */
+/* wrapper centres the arch and adds sage ambient glow */
 .hero-glow{
   position:relative;
-  width:100%;
+  width:min(300px,72vw);
   flex-shrink:0;
-  /* sage glow radiates behind the image */
+  margin-bottom:-.5rem; /* text overlaps glow slightly */
 }
+/* sage ambient halo – sits behind the photo */
 .hero-glow::before{
   content:'';position:absolute;
-  bottom:-30px;left:0;right:0;height:120px;
-  background:radial-gradient(ellipse at 50% 100%,
-    rgba(188,199,185,.55) 0%,rgba(188,199,185,.2) 50%,transparent 80%);
-  filter:blur(18px);z-index:2;pointer-events:none;
+  inset:-24px;border-radius:50% 50% 20% 20%;
+  background:radial-gradient(ellipse at 50% 38%,
+    rgba(188,199,185,.65) 0%,rgba(188,199,185,.28) 48%,transparent 74%);
+  filter:blur(22px);z-index:0;pointer-events:none;
 }
-/* plain rect photo, no arch */
+/* arch container – no border, no box-shadow, pure shape */
 .hero-arch{
   position:relative;z-index:1;
-  width:100%;
-  /* limit height so it's not enormous */
-  max-height:min(55vh,420px);
-  overflow:hidden;
-  border:none;border-radius:0;box-shadow:none;
+  border-radius:9999px 9999px 0 0;
+  width:100%;aspect-ratio:3/4;
+  overflow:visible; /* let mask do the dissolve, not overflow clip */
+  border:none;box-shadow:none;background:transparent;
 }
+/* image dissolves at ALL edges so the arch "melts" into background */
 .hero-arch img{
-  width:100%;height:100%;object-fit:cover;object-position:center 18%;display:block;
-  /* fade: sharp at top, dissolves at bottom into linen */
-  -webkit-mask-image:linear-gradient(to bottom,
-    black 0%,black 42%,rgba(0,0,0,.7) 62%,rgba(0,0,0,.15) 82%,transparent 100%);
-  mask-image:linear-gradient(to bottom,
-    black 0%,black 42%,rgba(0,0,0,.7) 62%,rgba(0,0,0,.15) 82%,transparent 100%);
+  width:100%;height:100%;object-fit:cover;object-position:center 15%;display:block;
+  border-radius:9999px 9999px 0 0;
+  /*
+    Composite mask: arch radial fade on sides/top + linear fade on bottom.
+    Result: smooth dissolution with no hard boundary anywhere.
+  */
+  -webkit-mask-image:
+    radial-gradient(ellipse 92% 95% at 50% 2%,
+      black 0%, black 48%, rgba(0,0,0,.6) 68%, transparent 88%),
+    linear-gradient(to bottom, black 0%, black 55%, rgba(0,0,0,.5) 72%, transparent 92%);
+  -webkit-mask-composite: intersect;
+  mask-image:
+    radial-gradient(ellipse 92% 95% at 50% 2%,
+      black 0%, black 48%, rgba(0,0,0,.6) 68%, transparent 88%),
+    linear-gradient(to bottom, black 0%, black 55%, rgba(0,0,0,.5) 72%, transparent 92%);
+  mask-composite: intersect;
 }
-.hero-text{text-align:center;padding:1.6rem 1.5rem 0;position:relative;z-index:3}
+.hero-text{text-align:center;padding:1.4rem 1.5rem 0;position:relative;z-index:3}
 .hero-date{font-size:.58rem;font-weight:700;letter-spacing:.42em;text-transform:uppercase;color:#96A893;margin-bottom:.9rem}
 .hero-names{
   font-family:'Prata',serif;
@@ -612,12 +623,22 @@ function validateBlock(scope, isMain){
 const FORM='https://docs.google.com/forms/d/e/1FAIpQLSc2ZOuuVHiUjd3Twh1u7epd9ySUEnGrNCG883r8OPnRmZ1BxA/formResponse';
 
 async function sendEntry(d){
+  // entry.1343323397 uses Google Forms "other" type for custom seat count.
+  // "Нет" → send as plain value.
+  // Any other text → send as __other_option__ + .other_option_response
   const body=new URLSearchParams({
     'entry.1900698349': d.name,
     'entry.2080550021': d.attend,
     'entry.1226381754': d.transport,
-    'entry.1343323397': d.seats,
   });
+  const seats = d.seats || '';
+  if(seats === 'Нет' || seats === 'Не требуется' || seats === 'Не указано' || seats === '') {
+    body.append('entry.1343323397', seats || 'Не указано');
+  } else {
+    // custom text value → Google Forms "other" option protocol
+    body.append('entry.1343323397', '__other_option__');
+    body.append('entry.1343323397.other_option_response', seats);
+  }
   try{await fetch(FORM,{method:'POST',body,mode:'no-cors'})}
   catch(e){console.warn('fetch (no-cors):',e)}
 }
