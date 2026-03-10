@@ -71,9 +71,9 @@ h2.lt{color:#F5F2ED}
 .hero-glow::before{
   content:'';position:absolute;
   inset:-20px;border-radius:50% 50% 20% 20%;
-  background:radial-gradient(ellipse at 50% 55%,
-    rgba(188,199,185,.35) 0%,rgba(188,199,185,.12) 55%,transparent 78%);
-  filter:blur(28px);z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 68%,
+    rgba(188,199,185,.22) 0%,rgba(188,199,185,.08) 55%,transparent 80%);
+  filter:blur(32px);z-index:0;pointer-events:none;
 }
 /* arch container – no border, no box-shadow, pure shape */
 .hero-arch{
@@ -87,24 +87,21 @@ h2.lt{color:#F5F2ED}
 .hero-arch img{
   width:100%;height:100%;object-fit:cover;object-position:center 15%;display:block;
   border-radius:9999px 9999px 0 0;
-  /*
-    Composite mask: arch radial fade on sides/top + linear fade on bottom.
-    Result: smooth dissolution with no hard boundary anywhere.
-  */
+  /* Fade starts only at ~70% — faces clearly visible, bottom melts into bg */
   -webkit-mask-image: radial-gradient(
-    ellipse 100% 100% at 50% 0%,
-    black 0%, black 44%,
-    rgba(0,0,0,.75) 58%,
-    rgba(0,0,0,.4) 72%,
-    rgba(0,0,0,.1) 84%,
+    ellipse 105% 108% at 50% 0%,
+    black 0%, black 64%,
+    rgba(0,0,0,.82) 73%,
+    rgba(0,0,0,.45) 83%,
+    rgba(0,0,0,.1) 93%,
     transparent 100%
   );
   mask-image: radial-gradient(
-    ellipse 100% 100% at 50% 0%,
-    black 0%, black 44%,
-    rgba(0,0,0,.75) 58%,
-    rgba(0,0,0,.4) 72%,
-    rgba(0,0,0,.1) 84%,
+    ellipse 105% 108% at 50% 0%,
+    black 0%, black 64%,
+    rgba(0,0,0,.82) 73%,
+    rgba(0,0,0,.45) 83%,
+    rgba(0,0,0,.1) 93%,
     transparent 100%
   );
 }
@@ -154,12 +151,14 @@ h2.lt{color:#F5F2ED}
 .tl-time{font-family:'Prata',serif;font-size:1.2rem;color:#2D3A2D;line-height:1.1}
 .tl-ev{font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#96A893;margin-top:2px}
 /* mobile: left-aligned vertical */
+.tl-mob{display:none}
 @media(max-width:540px){
   .tl::before{left:8px;transform:none}
   .tl-row{grid-template-columns:20px 1fr;gap:0 .9rem}
   .tl-l{display:none}
   .tl-dot{margin:0}
   .tl-r{text-align:left}
+  .tl-mob{display:block}
 }
 
 /* ─ WISH ─ */
@@ -234,7 +233,7 @@ h2.lt{color:#F5F2ED}
     <p class="hero-date">07 · 06 · 2026</p>
     <div class="hero-names">ВЛАДИСЛАВ<span class="hero-amp">&amp;</span>АНГЕЛИНА</div>
     <div style="width:34px;height:1px;background:#BCC7B9;margin:.9rem auto"></div>
-    <p class="hero-sub">Приглашение на свадьбу</p>
+    <p class="hero-sub"></p>
   </div>
 </section>
 
@@ -281,9 +280,9 @@ h2.lt{color:#F5F2ED}
 <div class="line-full"></div>
 
 <!-- ══ 4 · DRESS CODE ══ -->
-<section class="sec" style="background:#2D3A2D" data-aos="fade-up" data-aos-duration="800">
+<section class="sec" style="background:#363028" data-aos="fade-up" data-aos-duration="800">
   <div class="inner" style="text-align:center">
-    <span class="lbl dk">Цветовая гамма</span>
+    <span class="lbl dk"></span>
     <h2 class="lt" style="margin-bottom:.9rem">ДРЕСС-КОД</h2>
     <div style="width:34px;height:1px;background:rgba(188,199,185,.35);margin:0 auto 1.4rem"></div>
     <p style="font-size:.85rem;line-height:1.9;color:#BCC7B9;max-width:340px;margin:0 auto 2rem">
@@ -309,7 +308,7 @@ h2.lt{color:#F5F2ED}
       <div class="tl-row">
         <div class="tl-l"><div class="tl-time">14:00</div><div class="tl-ev">Сбор гостей</div></div>
         <div><div class="tl-dot"></div></div>
-        <div class="tl-r"></div>
+        <div class="tl-r"><div class="tl-mob"><div class="tl-time">14:00</div><div class="tl-ev">Сбор гостей</div></div></div>
       </div>
       <div class="tl-row" style="padding:1.3rem 0">
         <div class="tl-l"></div>
@@ -319,7 +318,7 @@ h2.lt{color:#F5F2ED}
       <div class="tl-row" style="padding-bottom:1.3rem">
         <div class="tl-l"><div class="tl-time">18:00</div><div class="tl-ev">Банкет</div></div>
         <div><div class="tl-dot"></div></div>
-        <div class="tl-r"></div>
+        <div class="tl-r"><div class="tl-mob"><div class="tl-time">18:00</div><div class="tl-ev">Банкет</div></div></div>
       </div>
       <div class="tl-row">
         <div class="tl-l"></div>
@@ -352,7 +351,7 @@ h2.lt{color:#F5F2ED}
 </section>
 
 <!-- ══ 7 · COUNTDOWN ══ -->
-<section class="sec" style="background:#2D3A2D" data-aos="fade-up" data-aos-duration="800">
+<section class="sec" style="background:#363028" data-aos="fade-up" data-aos-duration="800">
   <div class="inner" style="text-align:center">
     <span class="lbl dk">Уже совсем скоро</span>
     <h2 class="lt" style="margin-bottom:2rem">ДО МЕРОПРИЯТИЯ<br>ОСТАЛОСЬ</h2>
@@ -374,7 +373,7 @@ h2.lt{color:#F5F2ED}
   <div class="inner" style="text-align:center">
     <span class="lbl">Ответьте до 26 апреля</span>
     <h2 style="margin-bottom:.5rem">АНКЕТА ГОСТЯ</h2>
-    <p style="font-family:'Prata',serif;font-style:italic;font-size:1.3rem;color:#96A893;margin-bottom:1.8rem">26 апреля</p>
+    <p style="font-family:'Prata',serif;font-style:italic;font-size:1.3rem;color:#96A893;margin-bottom:1.8rem"></p>
     <div class="line" style="margin-bottom:2rem"></div>
 
     <div style="background:#fff;border:1px solid #D9E3D7;border-radius:1.4rem;padding:1.8rem 1.5rem;box-shadow:0 8px 36px rgba(45,58,45,.07);text-align:left">
@@ -385,7 +384,7 @@ h2.lt{color:#F5F2ED}
           <!-- Q1 Name -->
           <div>
             <label class="fl" for="mn">Представьтесь (фамилия, имя) *</label>
-            <input type="text" id="mn" class="fi" placeholder="Иванова Мария"/>
+            <input type="text" id="mn" class="fi" placeholder=""/>
             <p class="em" id="em-mn">Пожалуйста, укажите имя</p>
           </div>
           <!-- Q2 Attend -->
@@ -447,7 +446,7 @@ h2.lt{color:#F5F2ED}
 <!-- ══ 9 · CONTACTS ══ -->
 <section class="sec" data-aos="fade-up" data-aos-duration="800">
   <div class="inner" style="text-align:center">
-    <span class="lbl">Есть вопросы?</span>
+    <span class="lbl"></span>
     <h2 style="margin-bottom:1rem">КОНТАКТЫ</h2>
     <div class="line" style="margin-bottom:1.5rem"></div>
     <p style="font-size:.85rem;line-height:1.85;color:#6B7D6B;margin-bottom:1.6rem">По всем вопросам, связанным<br>с мероприятием, свяжитесь с нами:</p>
