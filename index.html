@@ -70,10 +70,10 @@ h2.lt{color:#F5F2ED}
 /* sage ambient halo – sits behind the photo */
 .hero-glow::before{
   content:'';position:absolute;
-  inset:-24px;border-radius:50% 50% 20% 20%;
-  background:radial-gradient(ellipse at 50% 38%,
-    rgba(188,199,185,.65) 0%,rgba(188,199,185,.28) 48%,transparent 74%);
-  filter:blur(22px);z-index:0;pointer-events:none;
+  inset:-20px;border-radius:50% 50% 20% 20%;
+  background:radial-gradient(ellipse at 50% 55%,
+    rgba(188,199,185,.35) 0%,rgba(188,199,185,.12) 55%,transparent 78%);
+  filter:blur(28px);z-index:0;pointer-events:none;
 }
 /* arch container – no border, no box-shadow, pure shape */
 .hero-arch{
@@ -91,16 +91,22 @@ h2.lt{color:#F5F2ED}
     Composite mask: arch radial fade on sides/top + linear fade on bottom.
     Result: smooth dissolution with no hard boundary anywhere.
   */
-  -webkit-mask-image:
-    radial-gradient(ellipse 92% 95% at 50% 2%,
-      black 0%, black 48%, rgba(0,0,0,.6) 68%, transparent 88%),
-    linear-gradient(to bottom, black 0%, black 55%, rgba(0,0,0,.5) 72%, transparent 92%);
-  -webkit-mask-composite: intersect;
-  mask-image:
-    radial-gradient(ellipse 92% 95% at 50% 2%,
-      black 0%, black 48%, rgba(0,0,0,.6) 68%, transparent 88%),
-    linear-gradient(to bottom, black 0%, black 55%, rgba(0,0,0,.5) 72%, transparent 92%);
-  mask-composite: intersect;
+  -webkit-mask-image: radial-gradient(
+    ellipse 100% 100% at 50% 0%,
+    black 0%, black 44%,
+    rgba(0,0,0,.75) 58%,
+    rgba(0,0,0,.4) 72%,
+    rgba(0,0,0,.1) 84%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 100% 100% at 50% 0%,
+    black 0%, black 44%,
+    rgba(0,0,0,.75) 58%,
+    rgba(0,0,0,.4) 72%,
+    rgba(0,0,0,.1) 84%,
+    transparent 100%
+  );
 }
 .hero-text{text-align:center;padding:1.4rem 1.5rem 0;position:relative;z-index:3}
 .hero-date{font-size:.58rem;font-weight:700;letter-spacing:.42em;text-transform:uppercase;color:#96A893;margin-bottom:.9rem}
@@ -571,76 +577,89 @@ function markRad(name,err){
 }
 
 /* ── VALIDATE BLOCK ──
-   Only Q1 (name) and Q2 (attend) are required.
-   Q3+Q4 are optional — collected if visible/filled.
+   Q1 name + Q2 attend = required.
+   Q3 transport = optional (collected only if coming).
+   Q4 seats = optional (collected only if transport=Нет).
 */
 function validateBlock(scope, isMain){
-  let ok=true;
+  let ok = true;
 
-  /* Q1 Name – REQUIRED */
-  const nId = isMain ? 'mn' : 'n-'+scope;
-  const nEl = document.getElementById(nId);
+  /* Q1 – name */
+  const nId  = isMain ? 'mn' : 'n-'+scope;
+  const nEl  = document.getElementById(nId);
   const name = nEl ? nEl.value.trim() : '';
-  if(!name){markFi(nEl,true);setErr(isMain?'em-mn':'en-'+scope,true);ok=false}
-  else{markFi(nEl,false);setErr(isMain?'em-mn':'en-'+scope,false)}
+  if(!name){ markFi(nEl,true); setErr(isMain?'em-mn':'en-'+scope, true);  ok=false; }
+  else      { markFi(nEl,false); setErr(isMain?'em-mn':'en-'+scope, false); }
 
-  /* Q2 Attend – REQUIRED */
+  /* Q2 – attend */
   const attName = isMain ? 'matt' : 'a-'+scope;
-  const attEl = document.querySelector('input[name="'+attName+'"]:checked');
-  if(!attEl){markRad(attName,true);setErr(isMain?'em-matt':'ea-'+scope,true);ok=false}
-  else{markRad(attName,false);setErr(isMain?'em-matt':'ea-'+scope,false)}
+  const attEl   = document.querySelector('input[name="'+attName+'"]:checked');
+  if(!attEl){ markRad(attName,true);  setErr(isMain?'em-matt':'ea-'+scope, true);  ok=false; }
+  else      { markRad(attName,false); setErr(isMain?'em-matt':'ea-'+scope, false); }
 
-  const coming = attEl && attEl.value === '\u0414\u0430, \u0431\u0443\u0434\u0443!';
+  if(!ok) return null;
 
-  /* Q3 Transport + Q4 Seats – optional */
-  let transport = '\u041d\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f', seats = '\u041d\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f';
+  const coming = attEl && attEl.value === 'Да, буду!';
+
+  /* Q3 – transport (optional, only collect when coming) */
+  let transport = null;
   if(coming){
     const trName = isMain ? 'mtr' : 'tr-'+scope;
-    const trEl = document.querySelector('input[name="'+trName+'"]:checked');
-    transport = trEl ? trEl.value : '\u041d\u0435 \u0443\u043a\u0430\u0437\u0430\u043d\u043e';
+    const trEl   = document.querySelector('input[name="'+trName+'"]:checked');
+    if(trEl) transport = trEl.value;
+  }
 
-    if(trEl && trEl.value === '\u041d\u0435\u0442'){
-      const stName = isMain ? 'mst' : 'st-'+scope;
-      const stEl = document.querySelector('input[name="'+stName+'"]:checked');
-      if(stEl){
-        if(stEl.value==='other'){
-          const oi = document.getElementById(isMain?'mst-other':'sto-'+scope);
-          seats = oi && oi.value.trim() ? oi.value.trim() : '\u0415\u0441\u0442\u044c';
-        } else {
-          seats = stEl.value;
-        }
+  /* Q4 – seats (optional, only collect when transport = Нет = has own car) */
+  let seats = null;
+  if(transport === 'Нет'){
+    const stName = isMain ? 'mst' : 'st-'+scope;
+    const stEl   = document.querySelector('input[name="'+stName+'"]:checked');
+    if(stEl){
+      if(stEl.value === 'other'){
+        const oi = document.getElementById(isMain ? 'mst-other' : 'sto-'+scope);
+        seats = oi && oi.value.trim() ? oi.value.trim() : null;
       } else {
-        seats = '\u041d\u0435 \u0443\u043a\u0430\u0437\u0430\u043d\u043e';
+        seats = stEl.value; // "Нет"
       }
     }
   }
 
-  if(!ok) return null;
-  return {name, attend: attEl?attEl.value:'', transport, seats};
+  return { name, attend: attEl.value, transport, seats };
 }
 
 /* ── SUBMIT ── */
 const FORM='https://docs.google.com/forms/d/e/1FAIpQLSc2ZOuuVHiUjd3Twh1u7epd9ySUEnGrNCG883r8OPnRmZ1BxA/formResponse';
 
 async function sendEntry(d){
-  // entry.1343323397 uses Google Forms "other" type for custom seat count.
-  // "Нет" → send as plain value.
-  // Any other text → send as __other_option__ + .other_option_response
-  const body=new URLSearchParams({
-    'entry.1900698349': d.name,
-    'entry.2080550021': d.attend,
-    'entry.1226381754': d.transport,
-  });
-  const seats = d.seats || '';
-  if(seats === 'Нет' || seats === 'Не требуется' || seats === 'Не указано' || seats === '') {
-    body.append('entry.1343323397', seats || 'Не указано');
-  } else {
-    // custom text value → Google Forms "other" option protocol
-    body.append('entry.1343323397', '__other_option__');
-    body.append('entry.1343323397.other_option_response', seats);
+  /*
+    Google Form section logic (from form source):
+      Attend "Да, буду!"            → go to transport question
+      Attend "К сожалению, не смогу..." → skip to submit (no transport/seats)
+      Transport "Да"                → skip to submit (no seats)
+      Transport "Нет"               → go to seats question
+    So we ONLY send fields relevant to the chosen path.
+    Sending invalid/dummy values for skipped fields causes the submission to fail.
+  */
+  const body = new URLSearchParams();
+  body.append('entry.1900698349', d.name);
+  body.append('entry.2080550021', d.attend);
+
+  if(d.attend === 'Да, буду!' && d.transport){
+    body.append('entry.1226381754', d.transport);
+
+    if(d.transport === 'Нет' && d.seats){
+      // Seats field: "Нет" = plain value; anything else = Google "other" option
+      if(d.seats === 'Нет'){
+        body.append('entry.1343323397', 'Нет');
+      } else {
+        body.append('entry.1343323397', '__other_option__');
+        body.append('entry.1343323397.other_option_response', d.seats);
+      }
+    }
   }
+
   try{await fetch(FORM,{method:'POST',body,mode:'no-cors'})}
-  catch(e){console.warn('fetch (no-cors):',e)}
+  catch(e){console.warn('fetch (no-cors expected):',e)}
 }
 
 async function doSubmit(){
