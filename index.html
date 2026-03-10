@@ -493,12 +493,14 @@ function addGuestCard() {
   const card = document.createElement('div');
   card.className = 'gcard';
   card.id = 'card-' + id;
-  card.innerHTML = `
-    ${num > 1 ? '<button type="button" class="rm-btn" onclick="removeCard('' + id + '')" title="Удалить">✕</button>' : ''}
+  const rmBtn = num > 1
+    ? '<button type="button" class="rm-btn" onclick="removeCard(\'' + id + '\')" title="Удалить">✕</button>'
+    : '';
+  card.innerHTML = rmBtn + `
     <div class="gcard-inner">
       <div class="gfield">
         <label class="fl">Гость ${num} — Фамилия, имя *</label>
-        <input type="text" id="n-${id}" class="fi" placeholder="Иванова Мария"/>
+        <input type="text" id="n-${id}" class="fi" placeholder=""/>
         <p class="em" id="en-${id}">Пожалуйста, укажите имя</p>
       </div>
       <div class="gfield">
@@ -515,17 +517,18 @@ function addGuestCard() {
             <label class="fl" style="margin-bottom:.4rem">Нужен транспорт?</label>
             <div class="att-btns">
               <button type="button" class="att-btn" id="try-${id}" onclick="pickTr('${id}','yes')">Да</button>
-              <button type="button" class="att-btn" id="trn-${id}" onclick="pickTr('${id}','no')">Нет (есть авто)</button>
+              <button type="button" class="att-btn" id="trn-${id}" onclick="pickTr('${id}','no')">Нет</button>
             </div>
           </div>
           <div class="trblock" id="stb-${id}">
             <div class="gfield" style="margin-top:.3rem">
               <label class="fl" style="margin-bottom:.4rem">Свободные места в машине?</label>
               <div class="att-btns">
-                <button type="button" class="att-btn" id="stn-${id}" onclick="pickSt('${id}','Нет')">0</button>
-                <button type="button" class="att-btn" id="st1-${id}" onclick="pickSt('${id}','1')">1</button>
-                <button type="button" class="att-btn" id="st2-${id}" onclick="pickSt('${id}','2')">2</button>
-                <button type="button" class="att-btn" id="st3-${id}" onclick="pickSt('${id}','3+')">3+</button>
+                <button type="button" class="att-btn" id="stn-${id}" onclick="pickStNo('${id}')">Нет</button>
+                <div style="display:flex;align-items:center;gap:.4rem;margin-top:.3rem">
+                  <button type="button" class="att-btn" id="sto-${id}" onclick="pickStOther('${id}')">Другое:</button>
+                  <input type="text" id="stv-${id}" class="fi" placeholder="2" style="width:64px;padding:.38rem .6rem;display:none"/>
+                </div>
               </div>
             </div>
           </div>
@@ -534,6 +537,7 @@ function addGuestCard() {
     </div>`;
   wrap.appendChild(card);
 }
+
 
 function addGuest() { addGuestCard(); }
 
@@ -564,10 +568,18 @@ function pickTr(id, val) {
   }
 }
 
-function pickSt(id, val) {
-  ['stn','st1','st2','st3'].forEach(p => document.getElementById(p+'-'+id)?.classList.remove('sel'));
-  const map = {'Нет':'stn','1':'st1','2':'st2','3+':'st3'};
-  if (map[val]) document.getElementById(map[val]+'-'+id)?.classList.add('sel');
+function pickStNo(id) {
+  document.getElementById('stn-'+id)?.classList.add('sel');
+  document.getElementById('sto-'+id)?.classList.remove('sel');
+  const inp = document.getElementById('stv-'+id);
+  if (inp) { inp.style.display = 'none'; inp.value = ''; }
+}
+function pickStOther(id) {
+  document.getElementById('sto-'+id)?.classList.add('sel');
+  document.getElementById('stn-'+id)?.classList.remove('sel');
+  const inp = document.getElementById('stv-'+id);
+  if (inp) inp.style.display = 'inline-block';
+  inp?.focus();
 }
 
 function validateCard(id) {
@@ -592,9 +604,11 @@ function validateCard(id) {
     else if (document.getElementById('trn-'+id)?.classList.contains('sel')) transport = 'Нет';
 
     if (transport === 'Нет') {
-      const sm = {'stn':'Нет','st1':'1','st2':'2','st3':'3+'};
-      for (const [pfx, v] of Object.entries(sm)) {
-        if (document.getElementById(pfx+'-'+id)?.classList.contains('sel')) { seats = v; break; }
+      if (document.getElementById('stn-'+id)?.classList.contains('sel')) {
+        seats = 'Нет';
+      } else if (document.getElementById('sto-'+id)?.classList.contains('sel')) {
+        const v = (document.getElementById('stv-'+id)?.value || '').trim();
+        seats = v || null;
       }
     }
   }
@@ -640,21 +654,37 @@ async function doSubmit() {
   for (const d of results) await sendEntry(d);
   console.log('RSVP sent:', results);
 
-  const anyYes = results.some(r => r.attend === 'Да, буду!');
-  showSuccess(anyYes, results.length);
+  showSuccess(results);
 }
 
-function showSuccess(coming, count) {
+function showSuccess(results) {
   document.getElementById('rsvp-wrap').style.display = 'none';
   const msg = document.getElementById('smsg');
-  const sr = document.getElementById('sr');
-  sr.innerHTML = coming ? '✓' : '';
-  sr.style.display = coming ? 'flex' : 'none';
-  document.getElementById('st').textContent = coming ? 'Мы очень рады!' : 'Ваш ответ получен';
-  document.getElementById('sd').style.display = coming ? 'block' : 'none';
-  document.getElementById('sp').textContent = coming
-    ? (count > 1 ? 'Все ' + count + ' гостя подтверждены. Ждём вас!' : 'До встречи на нашем празднике!')
-    : 'Жаль, что не сможете быть с нами, но спасибо, что предупредили!';
+  const sr  = document.getElementById('sr');
+  const yes = results.filter(r => r.attend === 'Да, буду!').length;
+  const no  = results.filter(r => r.attend !== 'Да, буду!').length;
+  const mixed = yes > 0 && no > 0;
+
+  let icon, title, sub;
+  if (mixed) {
+    icon  = '✉';
+    title = 'Ответы сохранены';
+    sub   = 'Часть гостей будет с нами, часть — нет. Спасибо, что сообщили!';
+  } else if (yes > 0) {
+    icon  = '✓';
+    title = 'Мы очень рады!';
+    sub   = yes > 1 ? 'Ждём вас всех на нашём празднике!' : 'До встречи на нашем празднике!';
+  } else {
+    icon  = '';
+    title = 'Ваш ответ получен';
+    sub   = 'Жаль, что не сможете быть с нами, но спасибо, что предупредили!';
+  }
+
+  sr.innerHTML = icon;
+  sr.style.display = icon ? 'flex' : 'none';
+  document.getElementById('st').textContent = title;
+  document.getElementById('sd').style.display = (yes > 0 && !mixed) ? 'block' : 'none';
+  document.getElementById('sp').textContent = sub;
   msg.style.display = 'flex';
 }
 
