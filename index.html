@@ -129,14 +129,15 @@ h2.lt{color:#F5F2ED}
 
 /* ─ SWATCHES ─ */
 .swatches{display:flex;justify-content:center;align-items:center;gap:1.1rem;flex-wrap:wrap}
-.sw{display:flex;flex-direction:column;align-items:center;gap:.45rem}
+.sw{display:flex;flex-direction:column;align-items:center;gap:.45rem;width:60px}
 .sw-c{
   width:44px;height:44px;border-radius:50%;flex-shrink:0;
-  box-shadow:0 0 0 2.5px rgba(255,255,255,.5),0 4px 14px rgba(0,0,0,.32);
+  box-shadow:0 0 0 2px rgba(255,255,255,.18),0 4px 14px rgba(0,0,0,.32);
+  border:1.5px solid rgba(255,255,255,.12);
 }
 .sw-c.linen{box-shadow:0 0 0 2.5px rgba(255,255,255,.95),0 4px 12px rgba(0,0,0,.25)}
 .sw-c.sage-s{box-shadow:0 0 0 2.5px rgba(255,255,255,.7),0 4px 12px rgba(0,0,0,.22)}
-.sw-l{font-family:'Manrope',sans-serif;font-size:.54rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#BCC7B9}
+.sw-l{font-family:'Manrope',sans-serif;font-size:.46rem;font-weight:700;letter-spacing:0;text-transform:uppercase;color:#BCC7B9;text-align:center;word-break:break-word;line-height:1.3}
 
 /* ─ TIMELINE ─ */
 .tl{position:relative;max-width:340px;margin:0 auto}
@@ -290,8 +291,8 @@ h2.lt{color:#F5F2ED}
     <div class="swatches">
       <div class="sw"><div class="sw-c" style="background:#604839"></div><span class="sw-l">Темно-коричневый</span></div>
       <div class="sw"><div class="sw-c" style="background:#AA9381"></div><span class="sw-l">Бежевый</span></div>
-      <div class="sw"><div class="sw-c" style="background:#F7EEDA"></div><span class="sw-l">Светло-бежевый</span></div>
-      <div class="sw"><div class="sw-c" style="background:#BCC7B9"></div><span class="sw-l">Светло-зелёный</span></div>
+      <div class="sw"><div class="sw-c" style="background:#F7EEDA;box-shadow:0 0 0 2px rgba(255,255,255,.7),0 4px 14px rgba(0,0,0,.2);border:none"></div><span class="sw-l">Светло-бежевый</span></div>
+      <div class="sw"><div class="sw-c" style="background:#BCC7B9;box-shadow:0 0 0 2px rgba(255,255,255,.55),0 4px 14px rgba(0,0,0,.25);border:none"></div><span class="sw-l">Светло-зелёный</span></div>
       <div class="sw"><div class="sw-c" style="background:#3F5240"></div><span class="sw-l">Тёмно-зелёный</span></div>
     </div>
   </div>
@@ -330,7 +331,7 @@ h2.lt{color:#F5F2ED}
 <div class="line-full"></div>
 
 <!-- ══ 6 · WISHES ══ -->
-<section class="sec" style="background:#BCC7B9" data-aos="fade-up" data-aos-duration="800">
+<section class="sec" style="background:#BCC7B9;box-shadow:0 0 0 2px rgba(255,255,255,.55),0 4px 14px rgba(0,0,0,.25);border:none" data-aos="fade-up" data-aos-duration="800">
   <div class="inner" style="text-align:center">
     <span class="lbl" style="color:#3F5240">Для вас</span>
     <h2 style="margin-bottom:1rem">ПОЖЕЛАНИЯ</h2>
