@@ -56,7 +56,7 @@ h2.lt{color:#F5F2ED}
 
 /* ─ HERO ─ */
 #hero{
-  padding:0 0 2.5rem;
+  padding:2.5rem 0 2.5rem;
   background:#F5F2ED;
   display:flex;flex-direction:column;align-items:center;gap:0;
 }
@@ -65,7 +65,8 @@ h2.lt{color:#F5F2ED}
   position:relative;
   width:min(300px,72vw);
   flex-shrink:0;
-  margin-bottom:-.5rem; /* text overlaps glow slightly */
+  margin:0 auto;
+  margin-bottom:-.5rem;
 }
 /* sage ambient halo – sits behind the photo */
 .hero-glow::before{
@@ -105,7 +106,7 @@ h2.lt{color:#F5F2ED}
     transparent 100%
   );
 }
-.hero-text{text-align:center;padding:1.4rem 1.5rem 0;position:relative;z-index:3}
+.hero-text{text-align:center;padding:1.4rem 1.5rem 0;position:relative;z-index:3;width:100%}
 .hero-date{font-size:.58rem;font-weight:700;letter-spacing:.42em;text-transform:uppercase;color:#96A893;margin-bottom:.9rem}
 .hero-names{
   font-family:'Prata',serif;
@@ -241,7 +242,7 @@ h2.lt{color:#F5F2ED}
 <section class="sec" data-aos="fade-up" data-aos-duration="800">
   <div class="inner" style="text-align:center">
     <span class="lbl">Дорогие наши</span>
-    <h2 style="margin-bottom:1.2rem">Друзья<br>и Родные!</h2>
+    <h2 style="margin-bottom:1.2rem">ДРУЗЬЯ И РОДНЫЕ!</h2>
     <div class="line" style="margin-bottom:1.6rem"></div>
     <p style="font-size:.875rem;line-height:1.95;color:#3F5240;max-width:400px;margin:0 auto 2.5rem">
       Мы вступаем на новый, важный путь и желаем заключить наш союз не только перед законом, но и перед Богом. Сердечно приглашаем вас разделить с нами радость этого святого таинства — нашего венчания и свадьбы!
@@ -410,16 +411,10 @@ h2.lt{color:#F5F2ED}
               <label class="rr" style="align-items:center;gap:.5rem">
                 <input type="radio" name="mst" value="other"/>
                 <span>Есть:</span>
-                <input type="text" id="mst-other" class="fi" placeholder="2" style="width:70px;padding:.4rem .6rem;display:inline-block"/>
+                <input type="text" id="mst-other" class="fi" style="width:70px;padding:.4rem .6rem;display:inline-block"/>
               </label>
             </div>
           </div>
-        </div>
-
-        <!-- ── ДОП. ГОСТИ ── -->
-        <div id="gw"></div>
-        <div style="margin-top:1rem">
-          <button type="button" class="btn-o" style="font-size:.6rem" onclick="addGuest()">+ Добавить гостя</button>
         </div>
 
         <!-- Отправить -->
@@ -486,8 +481,7 @@ let wi=1;
 function showW(n){document.querySelectorAll('.wish').forEach(e=>e.classList.remove('on'));document.getElementById('w'+n).classList.add('on');document.getElementById('wc').textContent=n+' / 3'}
 function nextW(){wi=wi<3?wi+1:1;showW(wi)}
 function prevW(){wi=wi>1?wi-1:3;showW(wi)}
-const wt=setInterval(nextW,5000);
-document.querySelectorAll('.wb').forEach(b=>b.addEventListener('click',()=>clearInterval(wt)));
+// auto-advance removed – manual only
 
 /* ── ATTEND CHANGE ── */
 // Q3 shows only when coming; Q4 shows only when Q3=Нет
@@ -696,7 +690,7 @@ function showSuccess(coming){
     text.textContent='До встречи на нашем празднике! Ждём вас с нетерпением.';
   } else {
     ring.style.display='none';title.style.display='none';divEl.style.display='none';
-    text.textContent='Ваш ответ сохранён. Нам очень жаль, что вы не сможете быть с нами, но спасибо, что предупредили!';
+    text.textContent='Нам жаль, что вы не сможете быть с нами, но спасибо, что предупредили!';
   }
   msg.style.display='flex';
 }
